@@ -1,11 +1,14 @@
 import json
 from datetime import datetime
 from flask import Flask, request, redirect, session
-import sqlite3
+import os
+import psycopg2
+def get_conn():
+    return psycopg2.connect(os.environ["DATABASE_URL"])
 
 def buat_database():
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
 
     cursor = conn.cursor()
 
@@ -42,11 +45,11 @@ def home():
 
     username = session.get("username")
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT jenis, nominal FROM transaksi WHERE username=?",
+        SELECT * FROM users WHERE username=%s AND password=%s
         (username,)
     )
 
@@ -104,7 +107,8 @@ def home():
     .card{{
         background: #eef2ff;
         backdrop-filter: blur(12px);
-        width: 500px;
+        width: 90%;
+        max-width: 420px;
 
         padding: 35px;
 
@@ -320,14 +324,14 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
 
-        conn = sqlite3.connect("keuangan.db")
+        conn = get_conn()
         cursor = conn.cursor()
 
         try:
 
             cursor.execute(
-                "INSERT INTO users (username, password) VALUES (?, ?)",
-                (username, password)
+                "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, password)
             )
 
             conn.commit()
@@ -464,11 +468,11 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        conn = sqlite3.connect("keuangan.db")
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM users WHERE username=? AND password=?",
+            SELECT * FROM users WHERE username=%s AND password=%s
             (username, password)
         )
 
@@ -684,7 +688,7 @@ def admin():
     if session.get("username") != "admin":
         return "<h1>Akses Ditolak!</h1>"
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("SELECT id, username FROM users")
@@ -839,11 +843,11 @@ def hapus_user(id_user):
     if session.get("username") != "admin":
         return "Akses Ditolak"
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute(
-    "SELECT username FROM users WHERE id=?",
+    SELECT * FROM users WHERE username=%s AND password=%s
     (id_user,)
     )
 
@@ -919,7 +923,7 @@ def hapus_user(id_user):
         """  
 
     cursor.execute(
-        "DELETE FROM users WHERE id=?",
+        "DELETE FROM users WHERE id=%",
         (id_user,)
     )
 
@@ -939,11 +943,11 @@ def admin_reset(id_user):
         if password_baru != konfirmasi:
             return "<h1>Password tidak sama!</h1>"
 
-        conn = sqlite3.connect("keuangan.db")
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute(
-            "UPDATE users SET password=? WHERE id=?",
+            "UPDATE users SET password=% WHERE id=%",
             (password_baru, id_user)
         )
 
@@ -1082,14 +1086,14 @@ def pemasukan():
 
         username = session["username"]
 
-        conn = sqlite3.connect("keuangan.db")
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute(
         """
             INSERT INTO transaksi
             (username, jenis, nominal, keterangan, tanggal)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """,
         (
             username,
@@ -1280,14 +1284,14 @@ def pengeluaran():
 
         username = session["username"]
 
-        conn = sqlite3.connect("keuangan.db")
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute(
         """
             INSERT INTO transaksi
             (username, jenis, nominal, keterangan, tanggal)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """,
         (
             username,
@@ -1463,13 +1467,13 @@ def rekapan():
     
     username = session["username"]
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
     SELECT id, jenis, nominal, keterangan, tanggal
     FROM transaksi
-    WHERE username = ?
+    WHERE username = %
     ORDER BY tanggal DESC
     """, (username,))
 
@@ -1695,7 +1699,7 @@ def rekapan():
 @app.route("/hapus/<int:id>")
 def hapus(id):
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     username = session["username"]
@@ -1703,7 +1707,7 @@ def hapus(id):
     cursor.execute(
         """
         DELETE FROM transaksi
-        WHERE id=? AND username=?
+        WHERE id=% AND username=%
         """,
         (id, username)
     )
@@ -1716,7 +1720,7 @@ def hapus(id):
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     if request.method == "POST":
@@ -1732,8 +1736,8 @@ def edit(id):
         cursor.execute(
             """
             UPDATE transaksi
-            SET nominal=?, keterangan=?
-            WHERE id=?
+            SET nominal=%, keterangan=%
+            WHERE id=%
             """,
             (nominal, keterangan, id)
         )
@@ -1750,7 +1754,7 @@ def edit(id):
         """
         SELECT *
         FROM transaksi
-        WHERE id=? AND username=?
+        WHERE id=% AND username=%
         """,
         (id, username)
     )
@@ -1915,7 +1919,7 @@ def logout():
 @app.route("/cekuser")
 def cekuser():
 
-    conn = sqlite3.connect("keuangan.db")
+    conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM users")
