@@ -51,7 +51,7 @@ def home():
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE username=%s",
+        "SELECT jenis, nominal FROM transaksi WHERE username=%s",
         (username,)
     )
 
@@ -1536,7 +1536,7 @@ def rekapan():
     cursor.execute("""
     SELECT id, jenis, nominal, keterangan, tanggal
     FROM transaksi
-    WHERE username = %
+    WHERE username = %s
     ORDER BY tanggal DESC
     """, (username,))
 
