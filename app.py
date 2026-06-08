@@ -339,7 +339,68 @@ def register():
             return redirect("/login")
 
         except:
-            return "<h1>Username sudah digunakan!</h1>"
+            return """
+            <html>
+            <head>
+                <title>Register Gagal</title>
+                <style>
+                    body{
+                        font-family:'Segoe UI',sans-serif;
+                        background:linear-gradient(135deg,#7c3aed,#3b82f6);
+                        min-height:100vh;
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        margin:0;
+                    }
+
+                    .card{
+                        background:white;
+                        padding:40px;
+                        border-radius:20px;
+                        text-align:center;
+                        box-shadow:0 15px 40px rgba(0,0,0,.2);
+                        width:350px;
+                    }
+
+                    h1{
+                        color:#ef4444;
+                        margin-bottom:15px;
+                    }
+
+                    p{
+                        color:#555;
+                        margin-bottom:25px;
+                    }
+
+                    a{
+                        display:inline-block;
+                        background:#7c3aed;
+                        color:white;
+                        text-decoration:none;
+                        padding:12px 24px;
+                        border-radius:10px;
+                        font-weight:bold;
+                    }
+
+                    a:hover{
+                        opacity:.9;
+                    }
+                </style>
+            </head>
+
+            <body>
+                <div class="card">
+                <h1>Username Sudah Digunakan</h1>
+                <p>Silakan gunakan username lain.</p>
+
+                <a href="/register">
+                    Kembali
+                </a>
+            </div>
+        </body>
+        </html>
+        """
 
         finally:
             conn.close()
@@ -472,7 +533,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM users WHERE username=%s AND password=%s"
+            "SELECT * FROM users WHERE username=%s AND password=%s",
             (username, password)
         )
 
