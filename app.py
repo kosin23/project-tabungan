@@ -986,7 +986,7 @@ def hapus_user(id_user):
         """  
 
     cursor.execute(
-        "DELETE FROM users WHERE id=%",
+        "DELETE FROM users WHERE id=%s",
         (id_user,)
     )
 
@@ -1010,7 +1010,7 @@ def admin_reset(id_user):
         cursor = conn.cursor()
 
         cursor.execute(
-            "UPDATE users SET password=% WHERE id=%",
+            "UPDATE users SET password=%s WHERE id=%s",
             (password_baru, id_user)
         )
 
@@ -1770,7 +1770,7 @@ def hapus(id):
     cursor.execute(
         """
         DELETE FROM transaksi
-        WHERE id=% AND username=%
+        WHERE id=%s AND username=%s
         """,
         (id, username)
     )
@@ -1799,8 +1799,8 @@ def edit(id):
         cursor.execute(
             """
             UPDATE transaksi
-            SET nominal=%, keterangan=%
-            WHERE id=%
+            SET nominal=%s, keterangan=%s
+            WHERE id=%s
             """,
             (nominal, keterangan, id)
         )
@@ -1817,7 +1817,7 @@ def edit(id):
         """
         SELECT *
         FROM transaksi
-        WHERE id=% AND username=%
+        WHERE id=%sAND username=%s
         """,
         (id, username)
     )
