@@ -37,7 +37,7 @@ def buat_database():
 app = Flask(__name__)
 app.secret_key = "rahasia123"
 
-buat_database()
+# buat_database()
 
 @app.route("/")
 def home():
