@@ -14,7 +14,7 @@ def buat_database():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         username TEXT UNIQUE,
         password TEXT
     )
@@ -22,7 +22,7 @@ def buat_database():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS transaksi(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         username TEXT,
         jenis TEXT,
         nominal INTEGER,
@@ -36,6 +36,8 @@ def buat_database():
 
 app = Flask(__name__)
 app.secret_key = "rahasia123"
+
+buat_database()
 
 @app.route("/")
 def home():
