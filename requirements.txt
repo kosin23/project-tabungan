@@ -8,6 +8,7 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 macholib @ file:///AppleInternal/Library/BuildRoots/4~CNlKugBUuKM58FJFHeNR3wcmLXUyWlLa_MEj66k/Library/Caches/com.apple.xbs/TemporaryDirectory.BQzQ7o/Sources/python3/macholib-1.15.2-py2.py3-none-any.whl
 MarkupSafe==3.0.3
+psycopg2-binary==2.9.12
 six @ file:///AppleInternal/Library/BuildRoots/4~CNlKugBUuKM58FJFHeNR3wcmLXUyWlLa_MEj66k/Library/Caches/com.apple.xbs/TemporaryDirectory.BQzQ7o/Sources/python3/six-1.15.0-py2.py3-none-any.whl
 Werkzeug==3.1.8
 zipp==3.23.1
