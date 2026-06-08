@@ -49,7 +49,7 @@ def home():
     cursor = conn.cursor()
 
     cursor.execute(
-        SELECT * FROM users WHERE username=%s AND password=%s
+        "SELECT * FROM users WHERE username=%s",
         (username,)
     )
 
@@ -472,7 +472,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute(
-            SELECT * FROM users WHERE username=%s AND password=%s
+            "SELECT * FROM users WHERE username=%s AND password=%s"
             (username, password)
         )
 
@@ -847,8 +847,8 @@ def hapus_user(id_user):
     cursor = conn.cursor()
 
     cursor.execute(
-    SELECT * FROM users WHERE username=%s AND password=%s
-    (id_user,)
+        "SELECT * FROM users WHERE username=%s",
+        (id_user,)
     )
 
     user = cursor.fetchone()
