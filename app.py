@@ -1817,7 +1817,7 @@ def edit(id):
         """
         SELECT *
         FROM transaksi
-        WHERE id=%sAND username=%s
+        WHERE id=%s AND username=%s
         """,
         (id, username)
     )
